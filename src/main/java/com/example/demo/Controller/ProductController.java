@@ -2,14 +2,17 @@ package com.example.demo.Controller;
 
 import com.example.demo.Entity.Product;
 import com.example.demo.Service.ProductService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequestMapping("/product")
+@RequiredArgsConstructor
 public class ProductController {
 
     @Autowired
@@ -23,8 +26,9 @@ public class ProductController {
 
     // READ: Get all products
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<com.example.demo.Dto.ProductDTO>> getAllProducts() {
+        log.debug("Received request to fetch all products");
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     // UPDATE: Update an existing product

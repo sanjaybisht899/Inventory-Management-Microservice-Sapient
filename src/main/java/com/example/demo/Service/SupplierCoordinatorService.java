@@ -4,6 +4,7 @@ import com.example.demo.Entity.Product;
 import com.example.demo.Repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
 public class SupplierCoordinatorService {
@@ -33,5 +34,18 @@ public class SupplierCoordinatorService {
         productRepository.save(product);
 
         return "Inventory updated. New quantity: " + product.getQuantity();
+    }
+    @CircuitBreaker(name = "supplierService", fallbackMethod = "fallbackRestock")
+    public String requestRestock(Long productId, int quantity, String urgency) {
+        // Simulate API call
+        if (simulateSupplierFailure()) {
+            throw new RuntimeException("Supplier API unavailable");
+        }
+
+        return "Supplier accepted the request for restocking.";
+    }
+
+    public String fallbackRestock(Long productId, int quantity, String urgency, Throwable t) {
+        return "Fallback: Unable to contact supplier at the moment. Try again later.";
     }
 }
