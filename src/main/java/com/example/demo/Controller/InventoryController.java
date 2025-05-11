@@ -3,7 +3,6 @@ package com.example.demo.Controller;
 import com.example.demo.Service.InventoryService;
 import com.example.demo.Service.SupplierCoordinatorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +17,12 @@ public class InventoryController {
     private SupplierCoordinatorService supplierCoordinatorService;
 
     @GetMapping("/getInventoryLevels")
-    public ResponseEntity<?> getInventoryLevels(@RequestParam Long productId) {
-        return inventoryService.getInventoryLevels(productId);
+    public ResponseEntity<?> getInventoryLevels(
+            @RequestParam(required = false) Long productId,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String location) {
+
+        return inventoryService.getInventoryLevels(productId, category, location);
     }
 
     @PostMapping("/updateInventory")
@@ -32,7 +35,7 @@ public class InventoryController {
     }
 
     @PostMapping("/coordinateWithSupplier")
-    public ResponseEntity<String> coordinateWithSupplier(
+    public String coordinateWithSupplier(
             @RequestParam Long productId,
             @RequestParam int requiredQuantity,
             @RequestParam String urgency) {
